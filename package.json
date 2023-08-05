@@ -1,0 +1,19 @@
+{
+	"name": "@bundlejs/webpack",
+	"version": "0.0.1",
+	"engines": {
+		"node": ">=10.15.0",
+		"npm": ">=6.9.0"
+	},
+	"main": "index.js",
+	"repository": "git@github.com:ml27299/bundlejs-webpack.git",
+	"scripts": {},
+	"dependencies": {
+		"before-build-webpack": "^0.2.9",
+		"esm": "^3.2.25",
+		"glob": "^7.1.7",
+		"loader-utils": "^1.4.0",
+		"webpack": "^4.46.0",
+		"webpack-inject-plugin": "^1.5.5"
+	}
+}
