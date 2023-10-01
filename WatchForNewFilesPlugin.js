@@ -31,7 +31,10 @@ function run({ appBundleName, rootComponentPath }) {
 
 	return new FileWatcherPlugin({
 		watchFileRegex: [path.resolve(`${rootComponentPath}/**`)],
-		onChangeCallback: () => {},
+		onChangeCallback: (filePath) => {
+			if (filePath.indexOf("routes.js") === -1) return;
+			refreshBundles(filePath);
+		},
 		onAddCallback: (filePath) => {
 			refreshBundles(filePath);
 		},
