@@ -1,6 +1,6 @@
 {
 	"name": "@bundlejs/webpack",
-	"version": "0.0.3",
+	"version": "0.1.0",
 	"engines": {
 		"node": ">=10.15.0",
 		"npm": ">=6.9.0"
@@ -11,6 +11,7 @@
 	"dependencies": {
 		"before-build-webpack": "^0.2.9",
 		"esm": "^3.2.25",
+		"filewatcher-webpack-plugin": "^1.2.0",
 		"glob": "^7.1.7",
 		"loader-utils": "^1.4.0",
 		"webpack": "^4.46.0",
