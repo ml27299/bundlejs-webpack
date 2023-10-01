@@ -41,10 +41,6 @@ export const serverLibs = require.context(
 	true,
 	/.*\\/@libs($|\\/.*\\.(js))/
 );
-
-
-export const hasResources = true
-
 `
 		: ""
 }

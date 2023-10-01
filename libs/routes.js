@@ -16,15 +16,14 @@ function run({ appBundleName, rootComponentPath }) {
 
 	function findBundlePaths(filePath) {
 		const exact = files
-			.filter(({ name }) => name === path.basename(appBundleName))
+			.filter(({ name }) => name === path.parse(appBundleName).name)
 			.find(({ dir }) => filePath === `${dir}/@module`);
-
 		return [
 			exact && exact.dir + `/${appBundleName}`,
 			(
 				files
 					.filter(({ dir }) => filePath.indexOf(`${dir}/`) === 0)
-					.filter(({ name }) => name === path.basename(appBundleName))
+					.filter(({ name }) => name === path.parse(appBundleName).name)
 					.sort((a, b) => a.dir.split("/").length - b.dir.split("/").length)
 					.shift() || {}
 			).dir + `/${appBundleName}`,
@@ -39,13 +38,13 @@ function run({ appBundleName, rootComponentPath }) {
 		.map((file) =>
 			require(`${file.path}/${file.name}`)
 				.default?.map((route) => Object.assign(route, { file }))
-				.map((route) =>
-					Object.assign(route, {
+				.map((route) => {
+					return Object.assign(route, {
 						componentPath: route.componentPath || findRootPath(file.path),
 						ssr: route.ssr || route.seo,
 						bundlePaths: findBundlePaths(file.path),
-					})
-				)
+					});
+				})
 		)
 		.filter(Boolean);
 
