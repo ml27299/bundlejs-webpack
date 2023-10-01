@@ -1,4 +1,4 @@
-name: Deploying @bundlejs/core npm package
+name: Deploying @bundlejs/webpack npm package
 on:
   push:
     branches:
