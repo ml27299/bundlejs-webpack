@@ -6,7 +6,12 @@ module.exports = function (source) {
 	const options = getOptions(this);
 	const { appBundleName, isRoot } = options;
 
+	if(source.indexOf("/* REMOVE-ON-RELOAD-START */") !== -1) {
+		source = source.split("/* REMOVE-ON-RELOAD-END */")[1]
+	}
+
 	return `
+/* REMOVE-ON-RELOAD-START */
 import BundleJs from "@bundlejs/core";
 export const routes = require.context(
 	"./",
@@ -30,7 +35,7 @@ ${
 		  )});`
 		: ""
 }
-	
+/* REMOVE-ON-RELOAD-END */	
 ${source}
     `;
 };

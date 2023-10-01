@@ -2,9 +2,6 @@ const path = require("path");
 const getServerEntries = require("./getServerEntries");
 const getReactEntries = require("./getReactEntries");
 
-var MultiEntryPlugin = require("webpack/lib/MultiEntryPlugin");
-var SingleEntryPlugin = require("webpack/lib/SingleEntryPlugin");
-
 escapeStringRegExp.matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
 function escapeStringRegExp(str) {
 	return str.replace(escapeStringRegExp.matchOperatorsRe, "\\$&");
@@ -13,19 +10,13 @@ function escapeStringRegExp(str) {
 class BundleJSWebPackPlugin {
 	constructor(options = {}) {
 		this.options = options;
-		const { reactEntries, childBundlePaths } = getReactEntries(this.options);
-		const { serverEntries, nonSsrBundlePaths, nonSsrComponentPaths } =
-			getServerEntries(this.options);
-
+		const { reactEntries } = getReactEntries(this.options);
 		this.reactEntries = reactEntries;
-		this.childBundlePaths = childBundlePaths;
-		this.serverEntries = serverEntries;
-		this.nonSsrBundlePaths = nonSsrBundlePaths;
-		this.nonSsrComponentPaths = nonSsrComponentPaths;
 	}
 
 	apply(compiler) {
 		compiler.hooks.compilation.tap("BundleJSWebPackPlugin", (compilation) => {
+			const { nonSsrBundlePaths } = getServerEntries(this.options);
 			compilation.hooks.normalModuleLoader.tap(
 				"BundleJSWebPackPlugin",
 				(loaderContext, module) => {
@@ -51,11 +42,11 @@ class BundleJSWebPackPlugin {
 											...this.options,
 											v: Object.values(this.reactEntries)
 												.flat()
-												.concat(this.nonSsrBundlePaths),
+												.concat(nonSsrBundlePaths),
 											r: module.resource,
 											exclude: Object.values(this.reactEntries)
 												.flat()
-												.concat(this.nonSsrBundlePaths)
+												.concat(nonSsrBundlePaths)
 												.includes(module.resource),
 										},
 								  }
