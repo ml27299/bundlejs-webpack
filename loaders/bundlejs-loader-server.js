@@ -12,11 +12,11 @@ export const routes = require.context(
 	/.*\\/@module($|\\/routes\\.(js))/
 );
 export const meta = require.context("./", true, /.*\\/@meta($|\\/.*\\.(js))/);
-export const loadable = require.context("./", true, /\\.(loadable)\\.(js)$/);
 
 ${
 	!exclude
 		? `
+export const loadable = require.context("./", true, /\\.(loadable)\\.(js)$/);
 export const serverModels = require.context(
 	"./",
 	true,
