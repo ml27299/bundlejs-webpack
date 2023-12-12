@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const FileWatcherPlugin = require("filewatcher-webpack-plugin");
+const FileWatcherPlugin = require("./libs/plugins/FileWatcherPlugin");
 const getServerEntries = require("./getServerEntries");
 
 function run({ appBundleName, rootComponentPath }) {
