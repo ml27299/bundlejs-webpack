@@ -43,7 +43,7 @@ export const serverLibs = require.context(
 );
 `
 		: `
-		export const loadable = require.context("./", true, /\\.(loadable)\\.(js)$/);
+		export const loadable = require.context("./", true, /\\.(loadable)\\.(js)$/, "weak");
 		`
 }
 ${source}
