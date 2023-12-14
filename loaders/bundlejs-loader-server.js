@@ -42,7 +42,9 @@ export const serverLibs = require.context(
 	/.*\\/@libs($|\\/.*\\.(js))/
 );
 `
-		: ""
+		: `
+		export const loadable = require.context("./", true, /\\.(loadable)\\.(js)$/);
+		`
 }
 ${source}
     `;
