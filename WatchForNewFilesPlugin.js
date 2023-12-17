@@ -3,6 +3,41 @@ const fs = require("fs");
 const FileWatcherPlugin = require("./libs/plugins/FileWatcherPlugin");
 const getServerEntries = require("./getServerEntries");
 
+class Queue {
+	constructor() {
+		this.queue = [];
+		this.running = false;
+	}
+	add(fn, onLoading, route) {
+		this.queue.push({ fn, onLoading, route });
+		if (this.queue.length === 1) this.run();
+	}
+	run() {
+		if (this.running || this.queue.length === 0) return;
+		this.running = true;
+		const { fn, onLoading, route } = this.queue[this.queue.length - 1];
+		this.queue = [];
+		fn()
+			.then(() => {
+				if (this.queue.length) {
+					this.running = false;
+					this.run();
+				} else {
+					onLoading(false, route);
+					this.running = false;
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+				if (this.queue.length) {
+					this.running = false;
+					this.run();
+				}
+			});
+	}
+}
+
+const queue = new Queue();
 function run({ appBundleName, rootComponentPath }) {
 	let { bundlePaths, ssrBundlePaths } = getServerEntries({
 		appBundleName,
@@ -33,13 +68,13 @@ function run({ appBundleName, rootComponentPath }) {
 		watchFileRegex: [path.resolve(`${rootComponentPath}/**`)],
 		onChangeCallback: (filePath) => {
 			if (filePath.indexOf("routes.js") === -1) return;
-			refreshBundles(filePath);
+			queue.add(refreshBundles(filePath));
 		},
 		onAddCallback: (filePath) => {
-			refreshBundles(filePath);
+			queue.add(refreshBundles(filePath));
 		},
 		onUnlinkCallback: (filePath) => {
-			refreshBundles(filePath);
+			queue.add(refreshBundles(filePath));
 		},
 		ignoreInitial: true,
 		usePolling: false,
