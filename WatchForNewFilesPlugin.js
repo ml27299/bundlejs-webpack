@@ -8,22 +8,21 @@ class Queue {
 		this.queue = [];
 		this.running = false;
 	}
-	add(fn, onLoading, route) {
-		this.queue.push({ fn, onLoading, route });
+	add(fn, fnParams) {
+		this.queue.push({ fn, fnParams });
 		if (this.queue.length === 1) this.run();
 	}
 	run() {
 		if (this.running || this.queue.length === 0) return;
 		this.running = true;
-		const { fn, onLoading, route } = this.queue[this.queue.length - 1];
+		const { fn, fnParams } = this.queue[this.queue.length - 1];
 		this.queue = [];
-		fn()
+		fn(fnParams)
 			.then(() => {
 				if (this.queue.length) {
 					this.running = false;
 					this.run();
 				} else {
-					onLoading(false, route);
 					this.running = false;
 				}
 			})
@@ -68,13 +67,13 @@ function run({ appBundleName, rootComponentPath }) {
 		watchFileRegex: [path.resolve(`${rootComponentPath}/**`)],
 		onChangeCallback: (filePath) => {
 			if (filePath.indexOf("routes.js") === -1) return;
-			queue.add(refreshBundles(filePath));
+			queue.add(refreshBundles, filePath);
 		},
 		onAddCallback: (filePath) => {
-			queue.add(refreshBundles(filePath));
+			queue.add(refreshBundles, filePath);
 		},
 		onUnlinkCallback: (filePath) => {
-			queue.add(refreshBundles(filePath));
+			queue.add(refreshBundles, filePath);
 		},
 		ignoreInitial: true,
 		usePolling: false,
