@@ -18,22 +18,20 @@ class Queue {
 		this.running = true;
 		const { fn } = this.queue[this.queue.length - 1];
 		this.queue = [];
-		fn()
-			.then(() => {
-				if (this.queue.length) {
-					this.running = false;
-					this.run();
-				} else {
-					this.running = false;
-				}
-			})
-			.catch((err) => {
-				console.log(err);
-				if (this.queue.length) {
-					this.running = false;
-					this.run();
-				}
-			});
+		fn.then(() => {
+			if (this.queue.length) {
+				this.running = false;
+				this.run();
+			} else {
+				this.running = false;
+			}
+		}).catch((err) => {
+			console.log(err);
+			if (this.queue.length) {
+				this.running = false;
+				this.run();
+			}
+		});
 	}
 }
 
